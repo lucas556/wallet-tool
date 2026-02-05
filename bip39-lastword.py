@@ -23,10 +23,7 @@ A) Pass 11 words as separate args:
 B) Pass a single quoted string:
     python3 bip39_lastword.py "toss measure okay still kidney dad sleep tuna salt rib ritual"
 
-Options
--------
---valid-only   Print only the valid 12th word (and the full mnemonic).
---all          Print all 128 candidates and mark the valid one (default).
+
 """
 
 from __future__ import annotations
@@ -113,7 +110,6 @@ def main() -> int:
 
     words11 = normalize_words_arg(args.words)
     # default output: show all candidates unless --valid-only specified
-    show_all = args.all or (not args.valid_only)
 
     mnemo = Mnemonic("english")
 
@@ -125,21 +121,11 @@ def main() -> int:
 
     valid = [x for x in cands if x[3]]
 
-    if show_all:
-        for tail, idx, w, ok in cands:
-            mark = " " if ok else "  "
-            print(f"{tail:3d}  idx={idx:4d}  {w:<10s} {mark}")
 
-    print(f"\nValid mnemonics found: {len(valid)}")
-    if valid:
-        tail, idx, w12, _ = valid[0]
-        full = " ".join(words11 + [w12])
-        print(f"Valid 12th word: {w12} (tail={tail}, index={idx})")
-        print(f"Full mnemonic: {full}")
-        return 0
-    else:
-        print("No valid 12th word found. The first 11 words may be wrong/order wrong/not English list.")
-        return 1
+    tail, idx, w12, _ = valid[0]
+    full = " ".join(words11 + [w12])
+    print(f"Valid 12th word: {w12} (tail={tail}, index={idx})")
+    print(f"Full mnemonic: {full}")
 
 
 if __name__ == "__main__":
